@@ -1,0 +1,32 @@
+import paramiko
+
+# Define the server information
+hostname = 'your_server_ip'
+port = 22
+username = 'your_username'
+password = 'your_password'
+
+# Create an SSH client
+ssh = paramiko.SSHClient()
+
+# Automatically add the server's host key (this is insecure and should be done with caution)
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+ssh.connect(hostname, port, username, password)
+
+# Path to the local SQL file
+local_sql_file_path = '/path/to/your/local/file.sql'
+
+# Path where you want to upload the SQL file on the server
+remote_sql_file_path = '/path/on/server/file.sql'
+
+# Upload the SQL file to the server
+sftp = ssh.open_sftp()
+sftp.put(local_sql_file_path, remote_sql_file_path)
+sftp.close()
+
+# Close the SSH connection
+ssh.close()
+
+print(f"SQL file '{local_sql_file_path}' uploaded to '{hostname}:{remote_sql_file_path}'")
